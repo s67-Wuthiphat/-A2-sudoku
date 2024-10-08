@@ -1,0 +1,14 @@
+void setup() {
+  size(900, 900);
+   
+}
+
+void draw() {
+  background(255);
+  
+  stroke(150);
+  for (int i = 0; i <= 900; i += 100) {
+    line(i, 0, i, 900);
+    line(0, i, 900, i); 
+  }
+}
