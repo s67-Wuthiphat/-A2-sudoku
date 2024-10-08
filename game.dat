@@ -6,8 +6,13 @@ void setup() {
 void draw() {
   background(255);
   
-  stroke(150);
+  stroke(0);
   for (int i = 0; i <= 900; i += 100) {
+    if(i==300 || i == 600){
+      strokeWeight(4);
+    } else {
+    strokeWeight(1);
+    }
     line(i, 0, i, 900);
     line(0, i, 900, i); 
   }
