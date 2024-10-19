@@ -107,12 +107,13 @@ int[][] userInputGrid = new int[9][9];
 double currentDifficulty = 0.6;
 boolean gameStarted = false; 
 int selectedDifficulty = -1;
+String checkMessage = "";
 
 void setup() {
   size(1200, 905);
   noLoop();
   selectedDifficulty = 1;
-  String checkMessage = "";
+  
 }
 
 void draw() {
@@ -129,6 +130,13 @@ void draw() {
         drawAddedNumbers(); 
     }
 }
+void drawTitle() {
+    fill(0);
+    textSize(60);
+    textAlign(CENTER, CENTER);
+    text("Sudoku Game", width / 2, height / 4); // ชื่อเกมกลางหน้าจอ
+}
+
 void drawGrd() { 
     strokeWeight(5);
     stroke(0);
@@ -280,20 +288,19 @@ void mousePressed() {
         }
     }
     
-    // Check for start game button click
     if (!gameStarted && mouseX >= 560 && mouseX <= 660 && mouseY >= height - 160 && mouseY < height - 110) {
         gameStarted = true; 
         resetSudoku(); 
     }
 
-    // Check for check solution button click
+   
     if (gameStarted && mouseX >= 930 && mouseX <= 1030 && mouseY >= 50 && mouseY < 100) {
         checkSolution(); 
         redraw(); // Redraw to show the result message
         return;
     }
     
-    // Handle grid cell selection
+    
     if (gameStarted && mouseX >= 0 && mouseX < 900 && mouseY >= 0 && mouseY < 900) {
         selectedCol = mouseX / 100;
         selectedRow = mouseY / 100; 
