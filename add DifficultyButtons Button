@@ -6,7 +6,7 @@ class Sudoku {
         grid = new int[9][9];
         isEditable = new boolean[9][9];
         fillGrid();
-        retainCells(0.6);
+        retainCells(percentage);
     }
 
     void fillGrid() {
@@ -88,6 +88,11 @@ class Sudoku {
                 if (grid[x][y] != 0) { 
                     text(grid[x][y], x * 100 + 50, y * 100 + 50);
                 }
+                if (userInputGrid[row][col] != 0) {
+                    fill(0, 0, 255); 
+                    text(userInputGrid[row][col], col * 100 + 50, row * 100 + 50);
+                    fill(0); 
+                }
             }
         }
     }
@@ -99,26 +104,30 @@ int selectedRow = -1;
 int selectedCol = -1; 
 ArrayList<PVector> addedNumbers = new ArrayList<PVector>(); 
 int[][] userInputGrid = new int[9][9];
-
+double currentDifficulty = 0.6;
+boolean gameStarted = false; 
+int selectedDifficulty = -1;
 
 void setup() {
   size(1200, 905);
   noLoop();
-  sudoku = new Sudoku();
+  selectedDifficulty = 1;
 }
 
 void draw() {
-  
-  background(255);
-  fill(150,210,220);
-  drawGrd();
-  sudoku.displayGrid();
-  drawSelection();
-  drawAddedNumbers();
-}  
-  
-  
-  
+ background(255);
+    
+    if (!gameStarted) {
+        drawDifficultyButtons(); 
+        drawStartButton(); 
+    } else {
+        fill(150, 210, 220);
+        drawGrd();
+        sudoku.displayGrid();
+        drawSelection();
+        drawAddedNumbers(); 
+    }
+}
 void drawGrd() { 
     strokeWeight(5);
     stroke(0);
@@ -148,7 +157,28 @@ void drawAddedNumbers() {
         line(pos.x * 100 + 20, pos.y * 100 + 75, pos.x * 100 + 80, pos.y * 100 + 75);
     }
 }
+void drawDifficultyButtons() {
+    for (int i = 0; i < 3; i++) {
+        fill(selectedDifficulty == i ? color(100, 150, 255) : color(200)); // เปลี่ยนสีให้ปุ่มที่ถูกเลือก
+        rect(470 + i * 100, height - 100, 80, 50); // ตำแหน่งของปุ่ม
+    }
+    
+    fill(0);
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    text("Hard", 510, height - 75);
+    text("Medium", 610, height - 75);
+    text("Easy", 710, height - 75);
+}
 
+void drawStartButton() {
+    fill(200);
+    rect(560, height - 160, 100, 50); // ขยับไปทางขวา 5 พิกเซล
+    fill(0);
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    text("Start Game", 610, height - 135);
+}
 void mousePressed() {
     if (mouseX >= 0 && mouseX < 900 && mouseY >= 0 && mouseY < 900) {
         selectedCol = mouseX / 100;
