@@ -1,0 +1,107 @@
+class Sudoku {
+    int[][] grid;
+
+    Sudoku() {
+        grid = new int[9][9];
+        fillGrid();
+    }
+
+    void fillGrid() {
+        fillDiagonalBoxes();
+        fillRemaining(0, 0);
+    }
+
+    void fillDiagonalBoxes() {
+        for (int i = 0; i < 9; i += 3) {
+            fillBox(i, i);
+        }
+    }
+
+    void fillBox(int row, int col) {
+        boolean[] used = new boolean[10]; // ตัวเลข 1-9
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int num;
+                do {
+                    num = (int) random(1, 10);
+                } while (used[num]);
+                used[num] = true;
+                grid[row + i][col + j] = num;
+            }
+        }
+    }
+
+    boolean fillRemaining(int row, int col) {
+        if (row == 9) return true;
+        if (col == 9) return fillRemaining(row + 1, 0);
+        if (grid[row][col] != 0) return fillRemaining(row, col + 1);
+
+        
+        for (int num = 1; num <= 9; num++) {
+            if (isSafe(row, col, num)) {
+                grid[row][col] = num;
+                if (fillRemaining(row, col + 1)) return true;
+                grid[row][col] = 0; 
+            }
+        }
+        return false;
+    }
+
+    boolean isSafe(int row, int col, int num) {
+       
+        for (int x = 0; x < 9; x++) {
+            if (grid[row][x] == num || grid[x][col] == num) return false;
+        }
+
+        
+        int startRow = row - row % 3, startCol = col - col % 3;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (grid[i + startRow][j + startCol] == num) return false;
+            }
+        }
+        return true;
+    }
+
+
+
+
+void setup() {
+  size(1200, 905);
+  noLoop();
+}
+
+void draw() {
+  
+  background(255);
+  fill(150,210,220);
+  drawGrd();
+}  
+  
+  
+  
+void drawGrd() { 
+  strokeWeight(5);
+  stroke(0);
+  rect(0, 0, width-300, height-5);
+  for (int i = 0; i <= 900; i += 100) {
+    if( i==300 || i == 600 ){
+      strokeWeight(4);
+    }else {
+    strokeWeight(1);
+    }
+    line(i, 0, i, 900);
+    line(0, i, 900, i); 
+  }
+
+
+    for (int x = 0; x < 9; x++) {
+    for (int y = 0; y < 9; y++) {
+      int randomNum = (int)random(1, 10); 
+      textSize(32);
+      fill(0);
+      textAlign(CENTER, CENTER);
+      text(randomNum, x * 100 + 50, y * 100 + 50);
+    }
+  }
+}
