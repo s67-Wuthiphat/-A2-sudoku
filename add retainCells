@@ -63,7 +63,19 @@ class Sudoku {
         return true;
     }
 
+ void retainCells(double percentage) {
+        int totalCells = 81;
+        int cellsToClear = totalCells - (int)(percentage * totalCells);
 
+        while (cellsToClear > 0) {
+            int row = (int) random(0, 9);
+            int col = (int) random(0, 9);
+            if (grid[row][col] != 0) { 
+                grid[row][col] = 0;
+                cellsToClear--;
+            }
+        }
+    }
 
 
 void setup() {
