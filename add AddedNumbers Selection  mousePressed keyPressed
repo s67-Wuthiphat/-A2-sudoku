@@ -1,8 +1,10 @@
 class Sudoku {
     int[][] grid;
+    boolean[][] isEditable;
 
     Sudoku() {
         grid = new int[9][9];
+        isEditable = new boolean[9][9];
         fillGrid();
         retainCells(0.6);
     }
@@ -95,12 +97,14 @@ Sudoku sudoku;
 
 int selectedRow = -1; 
 int selectedCol = -1; 
-
+ArrayList<PVector> addedNumbers = new ArrayList<PVector>(); 
+int[][] userInputGrid = new int[9][9];
 
 
 void setup() {
   size(1200, 905);
   noLoop();
+  sudoku = new Sudoku();
 }
 
 void draw() {
@@ -108,32 +112,64 @@ void draw() {
   background(255);
   fill(150,210,220);
   drawGrd();
+  sudoku.displayGrid();
+  drawSelection();
+  drawAddedNumbers();
 }  
   
   
   
 void drawGrd() { 
-  strokeWeight(5);
-  stroke(0);
-  rect(0, 0, width-300, height-5);
-  for (int i = 0; i <= 900; i += 100) {
-    if( i==300 || i == 600 ){
-      strokeWeight(4);
-    }else {
-    strokeWeight(1);
+    strokeWeight(5);
+    stroke(0);
+    rect(0, 0, width - 300, height - 5);
+    for (int i = 0; i <= 900; i += 100) {
+        if (i == 300 || i == 600) {
+            strokeWeight(4);
+        } else {
+            strokeWeight(1);
+        }
+        line(i, 0, i, 900);
+        line(0, i, 900, i); 
     }
-    line(i, 0, i, 900);
-    line(0, i, 900, i); 
-  }
-
-
-    for (int x = 0; x < 9; x++) {
-    for (int y = 0; y < 9; y++) {
-      int randomNum = (int)random(1, 10); 
-      textSize(32);
-      fill(0);
-      textAlign(CENTER, CENTER);
-      text(randomNum, x * 100 + 50, y * 100 + 50);
+}
+void drawSelection() {
+    if (selectedRow != -1 && selectedCol != -1) {
+        noFill();
+        stroke(255, 0, 0);
+        strokeWeight(3);
+        rect(selectedCol * 100, selectedRow * 100, 100, 100);
     }
-  }
+}
+void drawAddedNumbers() {
+    stroke(0, 0, 255);
+    strokeWeight(2);
+    for (PVector pos : addedNumbers) {
+        line(pos.x * 100 + 20, pos.y * 100 + 75, pos.x * 100 + 80, pos.y * 100 + 75);
+    }
+}
+
+void mousePressed() {
+    if (mouseX >= 0 && mouseX < 900 && mouseY >= 0 && mouseY < 900) {
+        selectedCol = mouseX / 100;
+        selectedRow = mouseY / 100; 
+        redraw(); 
+    }
+}
+
+void keyPressed() {
+    if (selectedRow != -1 && selectedCol != -1) {
+        if (sudoku.isEditable[selectedRow][selectedCol]) {
+            if (key >= '1' && key <= '9') {
+                int num = key - '0'; 
+                userInputGrid[selectedRow][selectedCol] = num; 
+                addedNumbers.add(new PVector(selectedCol, selectedRow)); 
+                redraw();
+            } else if (keyCode == DELETE) {
+                userInputGrid[selectedRow][selectedCol] = 0; 
+                addedNumbers.removeIf(p -> p.x == selectedCol && p.y == selectedRow);
+                redraw();
+            }
+        }
+    }
 }
