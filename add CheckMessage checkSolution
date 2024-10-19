@@ -112,6 +112,7 @@ void setup() {
   size(1200, 905);
   noLoop();
   selectedDifficulty = 1;
+  String checkMessage = "";
 }
 
 void draw() {
@@ -179,6 +180,93 @@ void drawStartButton() {
     textAlign(CENTER, CENTER);
     text("Start Game", 610, height - 135);
 }
+void drawCheckButton() {
+    fill(200);
+    rect(930, 50, 100, 50); 
+    fill(0);
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    text("Check", 980, 75); 
+}
+
+void drawCheckMessage() {
+    fill(0);
+    textSize(20);
+    textAlign(LEFT, CENTER);
+    
+    String[] lines = checkMessage.split("\n"); 
+    for (int i = 0; i < lines.length; i++) {
+        text(lines[i], 930, 150 + i * 25); 
+    }
+}
+
+void checkSolution() {
+    boolean isCorrect = true;
+    boolean isComplete = true;
+
+   
+    for (int row = 0; row < 9; row++) {
+        boolean[] seen = new boolean[10]; 
+        for (int col = 0; col < 9; col++) {
+            int num = userInputGrid[row][col];
+            if (num != 0) {
+                if (seen[num]) {
+                    isCorrect = false;
+                  } else {
+                    seen[num] = true; 
+                }
+            } else {
+                isComplete = false; 
+            }
+        }
+    }
+
+    
+    for (int col = 0; col < 9; col++) {
+        boolean[] seen = new boolean[10]; 
+        for (int row = 0; row < 9; row++) {
+            int num = userInputGrid[row][col];
+            if (num != 0) {
+                if (seen[num]) {
+                    isCorrect = false; 
+                } else {
+                    seen[num] = true; 
+                }
+            } else {
+                isComplete = false; 
+            }
+        }
+    }
+
+    
+    for (int boxRow = 0; boxRow < 3; boxRow++) {
+        for (int boxCol = 0; boxCol < 3; boxCol++) {
+            boolean[] seen = new boolean[10]; 
+            for (int row = boxRow * 3; row < boxRow * 3 + 3; row++) {
+                for (int col = boxCol * 3; col < boxCol * 3 + 3; col++) {
+                    int num = userInputGrid[row][col];
+                    if (num != 0) {
+                        if (seen[num]) {
+                            isCorrect = false;
+                          } else {
+                            seen[num] = true; 
+                        }
+                    } else {
+                        isComplete = false; 
+                    }
+                }
+            }
+        }
+    }
+
+   
+    if (isCorrect && isComplete) {
+        checkMessage = "You win!";
+    } else {
+        checkMessage = "You still haven't solved it\ncorrectly. Please try again.";
+    }
+}
+
 void mousePressed() {
     if (mouseX >= 0 && mouseX < 900 && mouseY >= 0 && mouseY < 900) {
         selectedCol = mouseX / 100;
