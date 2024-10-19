@@ -4,6 +4,7 @@ class Sudoku {
     Sudoku() {
         grid = new int[9][9];
         fillGrid();
+        retainCells(0.6);
     }
 
     void fillGrid() {
@@ -76,6 +77,25 @@ class Sudoku {
             }
         }
     }
+    void displayGrid() {
+        textSize(32);
+        fill(0);
+        textAlign(CENTER, CENTER);
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                if (grid[x][y] != 0) { 
+                    text(grid[x][y], x * 100 + 50, y * 100 + 50);
+                }
+            }
+        }
+    }
+}
+
+Sudoku sudoku;
+
+int selectedRow = -1; 
+int selectedCol = -1; 
+
 
 
 void setup() {
