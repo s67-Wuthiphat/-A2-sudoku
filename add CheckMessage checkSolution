@@ -268,13 +268,45 @@ void checkSolution() {
 }
 
 void mousePressed() {
-    if (mouseX >= 0 && mouseX < 900 && mouseY >= 0 && mouseY < 900) {
+    // Check for difficulty button clicks
+    if (!gameStarted) {
+        for (int i = 0; i < 3; i++) {
+            if (mouseX >= 470 + i * 100 && mouseX <= 550 + i * 100 && mouseY >= height - 100 && mouseY < height - 50) {
+                selectedDifficulty = i; 
+                currentDifficulty = (i == 0) ? 0.4 : (i == 1) ? 0.6 : 0.8; 
+                redraw(); 
+                return; 
+            }
+        }
+    }
+    
+    // Check for start game button click
+    if (!gameStarted && mouseX >= 560 && mouseX <= 660 && mouseY >= height - 160 && mouseY < height - 110) {
+        gameStarted = true; 
+        resetSudoku(); 
+    }
+
+    // Check for check solution button click
+    if (gameStarted && mouseX >= 930 && mouseX <= 1030 && mouseY >= 50 && mouseY < 100) {
+        checkSolution(); 
+        redraw(); // Redraw to show the result message
+        return;
+    }
+    
+    // Handle grid cell selection
+    if (gameStarted && mouseX >= 0 && mouseX < 900 && mouseY >= 0 && mouseY < 900) {
         selectedCol = mouseX / 100;
         selectedRow = mouseY / 100; 
         redraw(); 
     }
 }
-
+void resetSudoku() {
+    sudoku = new Sudoku(currentDifficulty);
+    addedNumbers.clear();
+    userInputGrid = new int[9][9]; // Reset user input grid
+    checkMessage = ""; // Reset the check message
+    redraw();
+}
 void keyPressed() {
     if (selectedRow != -1 && selectedCol != -1) {
         if (sudoku.isEditable[selectedRow][selectedCol]) {
